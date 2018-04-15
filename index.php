@@ -12,22 +12,39 @@
 	catch(Exception $e)
 	{die('Erreur : '.$e->getMessage());}
 	
-	$bdd = $bdd->prepare('SELECT * FROM album');
+	$req_a = $bdd->query("SELECT avatar FROM avatar WHERE id_user = 1");
+	$avatar = $req_a->fetch();
 	
-	if($bdd->execute()){
-	
-		$photo;
+	if(!empty($avatar)){
+		$avatar = $avatar["avatar"];
 		
-		while($donnees = $bdd->fetch()){
-			global $photo;
-			$photo .= "
-				<li style='display:inline'>
-					<img style='width:100px;height:100px' src='Avatar/".$donnees['photo']."'/>
-				</li>";
+		if(isset($_POST["envoi"])){
+			$update = $bdd->prepare('UPDATE avatar SET avatar = "'.$_POST["choix_avatar"].'" WHERE id_user = 1');
+			$update->execute(array());
+			header("Location:index.php");
 		}
 	}
 	else{
-		echo "Echec requete";
+		$avatar = "avatar/avatar_defaut";
+		
+		if(isset($_POST["envoi"])){
+			$insert = $bdd->prepare('INSERT INTO avatar (avatar, id_user) VALUES(?,?)');
+			$insert->execute(array($_POST["choix_avatar"], 1));
+			header("Location:index.php");
+		}
+	}
+	
+	$req_b = $bdd->query("SELECT * FROM album");
+	$photo;
+	$profile = 1;
+	
+	while($donnees = $req_b->fetch()){
+		global $photo;
+		$photo .= "
+			<li style='display:inline'>
+				<img style='width:100px;height:100px' id=".$profile." src='avatar/".$donnees['photo']."'onmouseover='profile_in(".$profile.")' onmouseout='profile_out(".$profile.")' onclick='valider(".$profile.")'/>
+			</li>";
+		$profile ++;
 	}
 ?>
 
@@ -90,7 +107,7 @@
 	<body>
 		<h1>Choisissez votre photo de profile</h1>
 		<div style ="border:1px solid black;width:400px;height:400px">
-			<img style='width:100%;height:100%;' src="<?php //echo $avatar ?>" id="avatar"/>
+			<img style='width:100%;height:100%;' src="<?php echo $avatar ?>" id="avatar"/>
 		</div>
 		<div style="display:none" id="choix">
 			<form method="post">
@@ -102,7 +119,7 @@
 			<?php echo $photo ?>
 		</ul>
 		<div id="valider">
-			<?php //if(!empty($valider)) {echo $valider;} ?>
+			<?php if(!empty($valider)) {echo $valider;} ?>
 		</div>
 	</body>
 </hml>
