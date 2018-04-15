@@ -1,5 +1,12 @@
 <?php
-	try {$bdd = new PDO('mysql:host=localhost;dbname=album;charset=utf8', 'root', '');}
+	$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+
+	$server = $url["host"];
+	$username = $url["user"];
+	$password = $url["pass"];
+	$db = substr($url["path"], 1);
+
+	try {$bdd = new PDO($server, $username, $password, $db);}
 	catch(Exception $e)
 	{die('Erreur : '.$e->getMessage());}
 	
