@@ -10,7 +10,7 @@
 		$db["user"],
 		$db["pass"],
 		ltrim($db["path"], "/")
-	));}
+	));;}
 	catch(Exception $e)
 	{die('Erreur : '.$e->getMessage());}
 	
