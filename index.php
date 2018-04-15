@@ -22,7 +22,7 @@
 			global $photo;
 			$photo .= "
 				<li style='display:inline'>
-					<img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/>
+					<img style='width:100px;height:100px' src='Avatar/".$donnees['photo']."'/>
 				</li>";
 		}
 	}
