@@ -1,33 +1,30 @@
 <?php
 	$db = parse_url(getenv("DATABASE_URL"));
 	
-	try {$bdd->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
-	   array(
-		'pdo.server' => array(
-		   'driver'   => 'pgsql',
-		   'user' => $db["user"],
-		   'password' => $db["pass"],
-		   'host' => $db["host"],
-		   'port' => $db["port"],
-		   'dbname' => ltrim($db["path"],'/')
-		   )
-	   )
-	);}
+	try {$pdo = new PDO("pgsql:" . sprintf(
+		"host=%s;port=%s;user=%s;password=%s;dbname=%s",
+		$db["host"],
+		$db["port"],
+		$db["user"],
+		$db["pass"],
+		ltrim($db["path"], "/")
+	));}
 	catch(Exception $e)
 	{die('Erreur : '.$e->getMessage());}
 	
 	$bdd = $bdd->prepare('SELECT * FROM album');
-	$bdd->execute();
 	
-	$photo;
+	if($bdd->execute()){
 	
-	while($donnees = $row->fetch()){
-		global $photo;
-		$photo .= "
-			<li style='display:inline'><img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/></li>";
-		$profile ++;
+		$photo;
+		
+		while($donnees = $row->fetch()){
+			global $photo;
+			$photo .= "
+				<li style='display:inline'><img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/></li>";
+			$profile ++;
+		}
 	}
-	*/
 ?>
 
 <!DOCTYPE html>
