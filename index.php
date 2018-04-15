@@ -42,7 +42,7 @@
 		global $photo;
 		$photo .= "
 			<li style='display:inline'>
-				<img style='width:100px;height:100px' id=".$profile." src='avatar/".$donnees['photo']."'onmouseover='profile_in(".$profile.")' onmouseout='profile_out(".$profile.")' onclick='valider(".$profile.")'/>
+				<img style='width:100px;height:100px' id=".$profile." src='Avatar/".$donnees['photo']."'onmouseover='profile_in(".$profile.")' onmouseout='profile_out(".$profile.")' onclick='valider(".$profile.")'/>
 			</li>";
 		$profile ++;
 	}
