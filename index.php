@@ -21,9 +21,13 @@
 		while($donnees = $bdd->fetch()){
 			global $photo;
 			$photo .= "
-				<li style='display:inline'><img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/></li>";
-			$profile ++;
+				<li style='display:inline'>
+					<img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/>
+				</li>";
 		}
+	}
+	else{
+		echo "Echec requete";
 	}
 ?>
 
@@ -95,7 +99,7 @@
 			</form>
 		</div>
 		<ul style="list-style:none" onmouseout='profile_default()'>
-			<?php //echo $photo ?>
+			<?php echo $photo ?>
 		</ul>
 		<div id="valider">
 			<?php //if(!empty($valider)) {echo $valider;} ?>
