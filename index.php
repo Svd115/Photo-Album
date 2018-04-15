@@ -1,39 +1,28 @@
 <?php
-	try {$bdd = new PDO('mysql:host=localhost;dbname=album;charset=utf8', 'root', '');}
-	catch(Exception $e)
-	{die('Erreur : '.$e->getMessage());}
+	$dbopts = parse_url(getenv('DATABASE_URL'));
+	$app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
+	   array(
+		'pdo.server' => array(
+		   'driver'   => 'pgsql',
+		   'user' => $dbopts["user"],
+		   'password' => $dbopts["pass"],
+		   'host' => $dbopts["host"],
+		   'port' => $dbopts["port"],
+		   'dbname' => ltrim($dbopts["path"],'/')
+		   )
+	   )
+	);
 	
-	$req_a = $bdd->query("SELECT avatar FROM avatar WHERE id_user = 1");
-	$avatar = $req_a->fetch();
+	$app->get('/db/', function() use($app) {
+	$st = $app['pdo']->prepare('SELECT * FROM album');
+	$st->execute();
 	
-	if(!empty($avatar)){
-		$avatar = $avatar["avatar"];
-		
-		if(isset($_POST["envoi"])){
-			$update = $bdd->prepare('UPDATE avatar SET avatar = "'.$_POST["choix_avatar"].'" WHERE id_user = 1');
-			$update->execute(array());
-			header("Location:index.php");
-		}
-	}
-	else{
-		$avatar = "avatar/avatar_defaut";
-		
-		if(isset($_POST["envoi"])){
-			$insert = $bdd->prepare('INSERT INTO avatar (avatar, id_user) VALUES(?,?)');
-			$insert->execute(array($_POST["choix_avatar"], 1));
-			header("Location:index.php");
-		}
-	}
-	
-	$req_b = $bdd->query("SELECT * FROM album");
 	$photo;
-	$profile = 1;
 	
-	while($donnees = $req_b->fetch()){
+	while($donnees = $row->fetch()){
 		global $photo;
 		$photo .= "
-			<li style='display:inline'><img style='width:100px;height:100px' id=".$profile." src='avatar/".$donnees['photo']."'onmouseover='profile_in(".$profile.")' onmouseout='profile_out(".$profile.")' onclick='valider(".$profile.")'/></li>";
-		$profile ++;
+			<li style='display:inline'><img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/></li>";
 	}
 ?>
 
@@ -95,20 +84,8 @@
 		
 	<body>
 		<h1>Choisissez votre photo de profile</h1>
-		<div style ="border:1px solid black;width:400px;height:400px">
-			<img style='width:100%;height:100%;' src="<?php echo $avatar ?>" id="avatar"/>
-		</div>
-		<div style="display:none" id="choix">
-			<form method="post">
-				<input type="hidden" id="choix_avatar" name="choix_avatar" value=""/>
-				<input type="submit" value="Choisir cet avatar" name="envoi"/>
-			</form>
-		</div>
 		<ul style="list-style:none" onmouseout='profile_default()'>
 			<?php echo $photo ?>
 		</ul>
-		<div id="valider">
-			<?php if(!empty($valider)) {echo $valider;} ?>
-		</div>
 	</body>
 </hml>
