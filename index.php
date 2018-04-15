@@ -1,27 +1,27 @@
 <?php
-	$db = parse_url(getenv("DATABASE_URL"));
-
+	$dbopts = parse_url(getenv('DATABASE_URL'));
+	$bdd->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
+	   array(
+		'pdo.server' => array(
+		   'driver'   => 'pgsql',
+		   'user' => $dbopts["user"],
+		   'password' => $dbopts["pass"],
+		   'host' => $dbopts["host"],
+		   'port' => $dbopts["port"],
+		   'dbname' => ltrim($dbopts["path"],'/')
+		   )
+	   )
+	);
 	
-
-	try {$bdd = new PDO("pgsql:" . sprintf(
-		"host=%s;port=%s;user=%s;password=%s;dbname=%s",
-		$db["host"],
-		$db["port"],
-		$db["user"],
-		$db["pass"],
-		ltrim($db["path"], "/")
-	));;}
-	catch(Exception $e)
-	{die('Erreur : '.$e->getMessage());}
-	
-	$req_a = $bdd->query("SELECT avatar FROM avatar WHERE id_user = 1");
+	$bdd->get('/db/', function() use($bdd) {
+	$req_a = $bdd['pdo']->query("SELECT avatar FROM avatar WHERE id_user = 1");
 	$avatar = $req_a->fetch();
 	
 	if(!empty($avatar)){
 		$avatar = $avatar["avatar"];
 		
 		if(isset($_POST["envoi"])){
-			$update = $bdd->prepare('UPDATE avatar SET avatar = "'.$_POST["choix_avatar"].'" WHERE id_user = 1');
+			$update = $bdd['pdo']->prepare('UPDATE avatar SET avatar = "'.$_POST["choix_avatar"].'" WHERE id_user = 1');
 			$update->execute(array());
 			header("Location:index.php");
 		}
@@ -30,13 +30,13 @@
 		$avatar = "avatar/avatar_defaut";
 		
 		if(isset($_POST["envoi"])){
-			$insert = $bdd->prepare('INSERT INTO avatar (avatar, id_user) VALUES(?,?)');
+			$insert = $bdd['pdo']->prepare('INSERT INTO avatar (avatar, id_user) VALUES(?,?)');
 			$insert->execute(array($_POST["choix_avatar"], 1));
 			header("Location:index.php");
 		}
 	}
 	
-	$req_b = $bdd->query("SELECT * FROM album");
+	$req_b = $bdd['pdo']->query("SELECT * FROM album");
 	$photo;
 	$profile = 1;
 	
