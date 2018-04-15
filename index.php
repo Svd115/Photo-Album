@@ -1,7 +1,7 @@
 <?php
 	$db = parse_url(getenv("DATABASE_URL"));
-	
-	try {$bdd = new PDO("pgsql:" . sprintf(
+	var_dump($db);
+	/*try {$bdd = new PDO("pgsql:" . sprintf(
 		"host=%s;port=%s;user=%s;password=%s;dbname=%s",
 		$db["host"],
 		$db["port"],
@@ -23,6 +23,7 @@
 			<li style='display:inline'><img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/></li>";
 		$profile ++;
 	}
+	*/
 ?>
 
 <!DOCTYPE html>
@@ -84,7 +85,7 @@
 	<body>
 		<h1>Choisissez votre photo de profile</h1>
 		<div style ="border:1px solid black;width:400px;height:400px">
-			<img style='width:100%;height:100%;' src="<?php echo $avatar ?>" id="avatar"/>
+			<img style='width:100%;height:100%;' src="<?php //echo $avatar ?>" id="avatar"/>
 		</div>
 		<div style="display:none" id="choix">
 			<form method="post">
@@ -93,10 +94,10 @@
 			</form>
 		</div>
 		<ul style="list-style:none" onmouseout='profile_default()'>
-			<?php echo $photo ?>
+			<?php //echo $photo ?>
 		</ul>
 		<div id="valider">
-			<?php if(!empty($valider)) {echo $valider;} ?>
+			<?php //if(!empty($valider)) {echo $valider;} ?>
 		</div>
 	</body>
 </hml>
