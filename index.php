@@ -1,30 +1,3 @@
-<?php
-	$dbopts = parse_url(getenv('DATABASE_URL'));
-	$app->register(new Csanquer\Silex\PdoServiceProvider\Provider\PDOServiceProvider('pdo'),
-	   array(
-		'pdo.server' => array(
-		   'driver'   => 'pgsql',
-		   'user' => $dbopts["user"],
-		   'password' => $dbopts["pass"],
-		   'host' => $dbopts["host"],
-		   'port' => $dbopts["port"],
-		   'dbname' => ltrim($dbopts["path"],'/')
-		   )
-	   )
-	);
-	
-	$app->get('/db/', function() use($app) {
-	$st = $app['pdo']->prepare('SELECT * FROM album');
-	$st->execute();
-	
-	$photo;
-	
-	while($donnees = $row->fetch()){
-		global $photo;
-		$photo .= "
-			<li style='display:inline'><img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/></li>";
-	}
-?>
 
 <!DOCTYPE html>
 <html>
@@ -84,8 +57,6 @@
 		
 	<body>
 		<h1>Choisissez votre photo de profile</h1>
-		<ul style="list-style:none" onmouseout='profile_default()'>
-			<?php echo $photo ?>
-		</ul>
+		
 	</body>
 </hml>
