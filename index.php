@@ -119,7 +119,11 @@
 			<?php echo $photo ?>
 		</ul>
 		<div id="valider">
-			<?php if(!empty($valider)) {echo $valider;} ?>
+			<?php 
+				if(!empty($valider)){
+					echo $valider;
+				} 
+			?>
 		</div>
 	</body>
 </hml>
