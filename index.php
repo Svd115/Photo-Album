@@ -1,12 +1,16 @@
 <?php
-	$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+	$db = parse_url(getenv("DATABASE_URL"));
 
-	$server = $url["host"];
-	$username = $url["user"];
-	$password = $url["pass"];
-	$db = substr($url["path"], 1);
+	
 
-	try {$bdd = new PDO($server, $username, $password, $db);}
+	try {$bdd = new PDO("pgsql:" . sprintf(
+		"host=%s;port=%s;user=%s;password=%s;dbname=%s",
+		$db["host"],
+		$db["port"],
+		$db["user"],
+		$db["pass"],
+		ltrim($db["path"], "/")
+	));}
 	catch(Exception $e)
 	{die('Erreur : '.$e->getMessage());}
 	
