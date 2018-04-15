@@ -1,14 +1,16 @@
 <?php
 	$db = parse_url(getenv("DATABASE_URL"));
-
-	$bdd = new PDO("pgsql:" . sprintf(
+	
+	try {$bdd = new PDO("pgsql:" . sprintf(
 		"host=%s;port=%s;user=%s;password=%s;dbname=%s",
 		$db["host"],
 		$db["port"],
 		$db["user"],
 		$db["pass"],
 		ltrim($db["path"], "/")
-	));
+	));}
+	catch(Exception $e)
+	{die('Erreur : '.$e->getMessage());}
 	
 	$bdd = $bdd->prepare('SELECT * FROM album');
 	$bdd->execute();
