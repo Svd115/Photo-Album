@@ -18,7 +18,7 @@
 	
 		$photo;
 		
-		while($donnees = $row->fetch()){
+		while($donnees = $bdd->fetch()){
 			global $photo;
 			$photo .= "
 				<li style='display:inline'><img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/></li>";
