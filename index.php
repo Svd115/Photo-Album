@@ -1,3 +1,27 @@
+<?php
+	$db = parse_url(getenv("DATABASE_URL"));
+
+	$bdd = new PDO("pgsql:" . sprintf(
+		"host=%s;port=%s;user=%s;password=%s;dbname=%s",
+		$db["host"],
+		$db["port"],
+		$db["user"],
+		$db["pass"],
+		ltrim($db["path"], "/")
+	));
+	
+	$bdd = $bdd->prepare('SELECT * FROM album');
+	$bdd->execute();
+	
+	$photo;
+	
+	while($donnees = $row->fetch()){
+		global $photo;
+		$photo .= "
+			<li style='display:inline'><img style='width:100px;height:100px' src='avatar/".$donnees['photo']."'/></li>";
+		$profile ++;
+	}
+?>
 
 <!DOCTYPE html>
 <html>
@@ -57,6 +81,20 @@
 		
 	<body>
 		<h1>Choisissez votre photo de profile</h1>
-		
+		<div style ="border:1px solid black;width:400px;height:400px">
+			<img style='width:100%;height:100%;' src="<?php echo $avatar ?>" id="avatar"/>
+		</div>
+		<div style="display:none" id="choix">
+			<form method="post">
+				<input type="hidden" id="choix_avatar" name="choix_avatar" value=""/>
+				<input type="submit" value="Choisir cet avatar" name="envoi"/>
+			</form>
+		</div>
+		<ul style="list-style:none" onmouseout='profile_default()'>
+			<?php echo $photo ?>
+		</ul>
+		<div id="valider">
+			<?php if(!empty($valider)) {echo $valider;} ?>
+		</div>
 	</body>
 </hml>
